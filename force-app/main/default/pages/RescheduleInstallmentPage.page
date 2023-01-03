@@ -1,0 +1,15 @@
+<apex:page standardController="Loan_Detail__c" extensions="RescheduleInstallmentCtrl" recordSetVar="loanDetails" lightningStylesheets="true">
+<apex:includeLightning />
+<div id="lightning" />
+
+<script>
+        $Lightning.use("c:RescheduleInstallmentApp", function () {
+        $Lightning.createComponent("c:RescheduleInstallmentCmp",
+            { recordId : '{!recId}' },
+            "lightning",
+            function (cmp) {
+            }
+        );
+    });
+</script>
+</apex:page>

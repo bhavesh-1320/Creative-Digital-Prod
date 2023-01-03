@@ -1,0 +1,114 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner></lightning-spinner>
+    </template>
+    <center>
+        <div class="mainDiv">
+            <template if:true={selectAction}>
+                <div style="width: 25%; text-align: left;">
+                    <h1 class="slds-form-element__label header">Select Action</h1>
+                    <template for:each={actions} for:item="option">
+                        <span class="slds-radio" style="display: block; padding: 2% 0;" key={option.value}>
+                            <input onchange={handleActionRadioChange} type="radio" id={option.value} value={option.value} name="default" />
+                            <label class="slds-radio__label" style="padding: 3%" for={option.value}>
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label options">{option.label}</span>
+                            </label>
+                        </span>
+                    </template>
+                    <template if:true={showInsNums}>
+                        <lightning-combobox style="color: rgb(24, 24, 24); padding-bottom: 10%;" label="Select Installment Splits" value={insSplitNum}
+                        options={insNumbers} onchange={handleInsNumChange}></lightning-combobox>
+                    </template>
+                </div>
+                <div style="margin-top: 10%; position: relative;" >
+                    <lightning-button onclick={handleNextBtn} variant="success" class="nextBtn" label="Next" disabled={nextBtnEditable}></lightning-button>
+                </div>
+            </template>
+            <template if:true={selectInstallment}>
+                <template if:true={showError}>
+                    <h1 class="options">There are no installments for {actionValue}</h1><br/>
+                </template>
+                <template if:false={showError}>
+                    <fieldset class="slds-form-element">
+                        <center>
+                            <legend class="slds-form-element__label header">Select Installment</legend>
+                        </center>
+                        <div class="slds-form-element__control">
+                            <template for:each={options} for:item="option">
+                                <span class="slds-radio" key={option.value} style="padding: 1% 0;">
+                                    <input onchange={handleRadioChange} type="radio" id={option.value} value={option.value} name="default" />
+                                    <label class="slds-radio__label" style="padding: 3%" for={option.value}>
+                                        <span class="slds-radio_faux"></span>
+                                        <span class="slds-form-element__label options">{option.label}</span>
+                                    </label>
+                                    </span>
+                            </template>
+                        </div>
+                    </fieldset>
+                    <div style="margin-top: 10%; position: relative;" >
+                        <lightning-button onclick={handleSelectInsNextBtn} variant="success" class="nextBtn" label="Next" disabled={nextBtnEditable}></lightning-button>
+                    </div>
+                </template>
+            </template>
+            <template if:true={showInsDetails} style="text-align: left;">
+                <center>
+                    <legend class="slds-form-element__label header">Installment-{insName}</legend>
+                </center>
+                <lightning-layout style="text-align: left; padding: 4%;" multiple-rows="true">
+                    <lightning-layout-item size="5">
+                        <lightning-input label="Amount" value={insAmt} readonly="true"></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2">
+                    </lightning-layout-item>
+                    <lightning-layout-item size="5">
+                        <lightning-input label="Due Date" type="Date" value={insDueDate} onchange={handleFieldChangeNotResch}></lightning-input>                        
+                    </lightning-layout-item>
+                    <lightning-layout-item size="5">
+                        <lightning-input label="Penalty Amount" onchange={handleFieldChangeNotResch} value={insPenalty}></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2">
+                    </lightning-layout-item>
+                    <lightning-layout-item size="5" style="margin-top: 1.2%;">
+                        <lightning-combobox style="color: rgb(24, 24, 24);" label="Payment Method" value={insPaymentMethod}
+                        options={paymentMethods} onchange={handleFieldChangeNotResch}></lightning-combobox>
+
+                    </lightning-layout-item>
+                </lightning-layout>
+                <div style="margin-top: 10%; position: relative;" >
+                    <lightning-button onclick={handleVoidSaveBtn} variant="success" class="nextBtn" label="Save" disabled={reschBtnEditable}></lightning-button>
+                </div>
+            </template>
+            <template if:true={showResch} style="text-align: left;">
+                <center>
+                    <legend class="slds-form-element__label header">Installment-{insName}</legend>
+                </center>
+                <template for:each={reschRecs} for:item="rec" for:index="idx">
+                    <lightning-layout key={rec.Id} style="text-align: left; padding: 4%;" multiple-rows="true">
+                        <lightning-layout-item size="5">
+                            <lightning-input label="Amount" data-idx={idx} onchange={handleFieldChange} value={rec.Amount}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="2">
+                        </lightning-layout-item>
+                        <lightning-layout-item size="5">
+                            <lightning-input label="Due Date" data-idx={idx} type="Date" value={rec.DueDate} onchange={handleFieldChange}></lightning-input>                        
+                        </lightning-layout-item>
+                        <lightning-layout-item size="5">
+                            <lightning-input label="Penalty Amount" data-idx={idx} onchange={handleFieldChange} value={rec.PAmt}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="2">
+                        </lightning-layout-item>
+                        <lightning-layout-item size="5" style="margin-top: 1.2%;">
+                            <lightning-combobox style="color: rgb(24, 24, 24);" data-idx={idx} label="Payment Method" value={rec.PayMethod}
+                            options={paymentMethods} onchange={handleFieldChange}></lightning-combobox>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <hr key={rec.Id}>
+                </template>
+                <div style="margin-top: 10%; position: relative;" >
+                    <lightning-button onclick={handleReschBtn} variant="success" class="nextBtn" label="Save" ></lightning-button>
+                </div>
+            </template>
+        </div>
+    </center>
+</template>
